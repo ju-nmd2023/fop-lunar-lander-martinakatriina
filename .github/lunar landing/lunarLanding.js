@@ -1,34 +1,86 @@
+let starX = [];
+let starY = [];
+let starAlpha = [];
+
 function setup() {
   createCanvas(600, 600);
   background(0, 36, 61);
+  nightSky();
 }
 
 function startScreen() {
   background(180, 180, 180);
   textSize(20);
-  fill(0);
+  fill(0, 0, 0);
   text("start", 200, 200);
 }
 
 // game screen
-function moon(x, y) {
-  fill(180, 180, 180);
-  arc(300, 600, 630, 150, PI, 0, CHORD);
+
+function moon() {
+  x = width / 2;
+  y = height / 2;
+  fill(100, 100, 100);
+  arc(x, y * 2, x * 1.8, y / 2, PI, 0, CHORD);
 }
 
 function ufo() {
-  ufoX = width / 2;
-  ufoY = height / 2;
-  ufoSize = 80;
+  x = width / 2;
+  y = height / 2;
+  noStroke();
+  fill(54, 87, 114);
+  ellipse(x, y - 200, 150, 150);
+  fill(255, 156, 62);
+  arc(x, y - 210, 80, 60, PI, 0, CHORD);
+  fill(247, 71, 47);
+  arc(x, y - 185, 200, 60, PI, 0, CHORD);
+  fill(147, 16, 0);
+  arc(x, y - 184, 200, 20, PI, 3.1, CHORD);
+  fill(79, 135, 124);
+  ellipse(x, y - 180, 100, 5);
+
+  beginShape();
+  vertex(x - 40, y - 180);
+  vertex(x - 100, y + 250);
+  bezierVertex(x - 20, y + 250, x + 40, y + 250, x + 40, y + 250); // Add curves
+  vertex(x + 100, y + 250);
+  vertex(x + 40, y - 180);
+  endShape();
 }
 
-function gameScreen(x, y, s) {
-  s = 1;
-  x = 100;
-  y = 100;
+//night sky
+function nightSky() {
+  for (let i = 0; i < 100; i++) {
+    const x = Math.floor(Math.random() * width);
+    const y = Math.floor(Math.random() * height);
+    const alpha = Math.random();
 
-  ufo(x, y, s);
+    starX.push(x);
+    starY.push(y);
+    starAlpha.push(alpha);
+  }
+}
+
+function draw() {
+  noStroke();
+
+  for (let index in starX) {
+    fill(240, 230, 140, Math.abs(Math.sin(starAlpha[index])) * 255);
+    ellipse(starX[index], starY[index], 3);
+    starAlpha[index] = starAlpha[index] + 0.02;
+  }
+
+  gameScreen();
+}
+
+//
+
+function gameScreen() {
+  let x = width / 2;
+  let y = height / 2;
+
   moon();
+  ufo();
 }
 
 function resultScreen() {
@@ -59,4 +111,4 @@ function draw() {
   } else if (state === "result") {
     state = "game";
   }
-} 
+} */
