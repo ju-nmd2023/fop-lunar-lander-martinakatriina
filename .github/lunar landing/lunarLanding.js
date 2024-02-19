@@ -13,9 +13,7 @@ let lunarLander = {
     pop();
   },
 
-  moon: function () {
-    let x = width / 2;
-    let y = height / 2;
+  moon: function (x, y) {
     push();
     fill(100, 100, 100);
     arc(x, y * 2, x * 2.3, y / 2, PI, 0, CHORD);
@@ -23,8 +21,9 @@ let lunarLander = {
   },
 
   ufo: function (x, y) {
-    x = width / 2;
-    y = height / 2;
+    let ufoY = 100;
+    let velocity = 0.5;
+    let acceleration = 0.1;
     push();
     translate();
     noStroke();
@@ -47,6 +46,10 @@ let lunarLander = {
     vertex(x + 40, y - 180);
     endShape();
     pop();
+
+    this.ufo(100, ufoY);
+    ufoY = ufoY + velocity;
+    velocity = velocity + acceleration;
   },
 
   //starry night background
@@ -71,6 +74,7 @@ let lunarLander = {
       ellipse(this.starX[index], this.starY[index], 3);
       this.starAlpha[index] = this.starAlpha[index] + 0.02;
     }
+
     this.gameScreen();
   },
 
@@ -85,8 +89,8 @@ let lunarLander = {
   gameScreen: function () {
     let x = width / 2;
     let y = height / 2;
-    this.moon();
-    this.ufo();
+    lunarLander.moon(width / 2, height / 2);
+    lunarLander.ufo(width / 2, height / 2); // this.ufo();
   },
 
   resultScreen: function () {
