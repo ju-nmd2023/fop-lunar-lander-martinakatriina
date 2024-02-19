@@ -6,27 +6,27 @@ let lunarLander = {
   gameTimer: 0,
 
   setUp: function () {
+    push();
     createCanvas(600, 600);
     background(0, 36, 61);
     this.nightSky();
-  },
-  startScreen: function () {
-    background(180, 180, 180);
-    textSize(20);
-    fill(0, 0, 0);
-    text("start", 200, 200);
+    pop();
   },
 
   moon: function () {
     let x = width / 2;
     let y = height / 2;
+    push();
     fill(100, 100, 100);
-    arc(x, y * 2, x * 1.8, y / 2, PI, 0, CHORD);
+    arc(x, y * 2, x * 2.3, y / 2, PI, 0, CHORD);
+    pop();
   },
 
-  ufo: function () {
+  ufo: function (x, y) {
     x = width / 2;
     y = height / 2;
+    push();
+    translate();
     noStroke();
     fill(54, 87, 114);
     ellipse(x, y - 200, 150, 150);
@@ -46,10 +46,13 @@ let lunarLander = {
     vertex(x + 100, y + 250);
     vertex(x + 40, y - 180);
     endShape();
+    pop();
   },
 
+  //starry night background
   nightSky: function () {
-    for (let i = 0; i < 100; i++) {
+    background(0, 36, 61);
+    for (let i = 0; i < 200; i++) {
       const x = Math.floor(Math.random() * width);
       const y = Math.floor(Math.random() * height);
       const alpha = Math.random();
@@ -60,16 +63,23 @@ let lunarLander = {
     }
   },
 
-  //night sky
   draw: function () {
     background(0, 36, 61);
     noStroke();
     for (let index in this.starX) {
-      fill(240, 230, 140, Math.abs(Math.sin(starAlpha[index])) * 255);
+      fill(240, 230, 140, Math.abs(Math.sin(this.starAlpha[index])) * 255);
       ellipse(this.starX[index], this.starY[index], 3);
       this.starAlpha[index] = this.starAlpha[index] + 0.02;
     }
     this.gameScreen();
+  },
+
+  // different screens
+
+  startScreen: function () {
+    textSize(20);
+    fill(255, 255, 255);
+    text("Start Game", 200, 200);
   },
 
   gameScreen: function () {
@@ -80,36 +90,43 @@ let lunarLander = {
   },
 
   resultScreen: function () {
-    background(255, 255, 255);
+    textSize(20);
+    fill(255, 255, 255);
+    text("Game Over", 200, 200);
+  },
+
+  // on click
+  /*draw: function () {
+    if (this.state === "start") {
+      this.startScreen();
+    } else if (this.state === "game") {
+      this.gameScreen();
+      this.gameTimer = this.gameTimer + 1;
+      if (this.gameTimer >= 100) {
+        this.gameTimer = 0;
+        this.state = "result";
+      }
+    } else if (state === "result") {
+      this.resultScreen();
+    }
+  },
+*/
+  mouseClicked: function () {
+    if (this.state === "start") {
+      this.state = "game";
+    } else if (this.state === "game") {
+      this.state = "result";
+    } else if (this.state === "result") {
+      this.state = "game";
+    }
   },
 };
 
 lunarLander.setUp();
+{
+  createCanvas(width, height);
+}
 
 function draw() {
   lunarLander.draw();
 }
-
-/*
-function draw() {
-  if (state === "start") {
-    startScreen();
-  } else if (state === "game") {
-    gameScreen();
-     gameTimer = gameTimer + 1;
-    if (gameTimer >= 50) {
-      gameTimer = 0;
-      state = "result";
-    } 
-  } else if (state === "result") {
-    resultScreen();
-  }
-}
-
- function mouseClicked() {
-  if (state === "start") {
-    state = "game";
-  } else if (state === "result") {
-    state = "game";
-  }
-} */
