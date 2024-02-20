@@ -3,14 +3,15 @@ let lunarLander = {
   starY: [],
   starAlpha: [],
   state: "game",
-  gameTimer: 0,
+  catY: height - 330,
+  velocity: 0.5,
+  acceleration: 0.1,
+  // gameIsRunning: false,
 
   setUp: function () {
-    push();
     createCanvas(600, 600);
     background(0, 36, 61);
     this.nightSky();
-    pop();
   },
 
   moon: function (x, y) {
@@ -20,10 +21,16 @@ let lunarLander = {
     pop();
   },
 
+  cat: function (x, y) {
+    push();
+    fill(0, 0, 0);
+    ellipse(x, y - 200, 15, 15);
+    triangle(x - 8, y - 200, x - 8, y - 211, x + 6, y - 200);
+    triangle(x - 6, y - 200, x + 8, y - 211, x + 8, y - 200);
+    pop();
+  },
+
   ufo: function (x, y) {
-    let ufoY = 100;
-    let velocity = 0.5;
-    let acceleration = 0.1;
     push();
     translate();
     noStroke();
@@ -35,21 +42,16 @@ let lunarLander = {
     arc(x, y - 185, 200, 60, PI, 0, CHORD);
     fill(147, 16, 0);
     arc(x, y - 184, 200, 20, PI, 3.1, CHORD);
-    fill(79, 135, 124);
+    fill(79, 135, 124, 180);
     ellipse(x, y - 180, 100, 5);
 
     beginShape();
     vertex(x - 40, y - 180);
     vertex(x - 100, y + 250);
-    bezierVertex(x - 20, y + 250, x + 40, y + 250, x + 40, y + 250); // Add curves
-    vertex(x + 100, y + 250);
+    bezierVertex(x - 100, y + 250, x, y + 290, x + 100, y + 250);
     vertex(x + 40, y - 180);
     endShape();
     pop();
-
-    this.ufo(100, ufoY);
-    ufoY = ufoY + velocity;
-    velocity = velocity + acceleration;
   },
 
   //starry night background
@@ -74,10 +76,8 @@ let lunarLander = {
       ellipse(this.starX[index], this.starY[index], 3);
       this.starAlpha[index] = this.starAlpha[index] + 0.02;
     }
-
     this.gameScreen();
   },
-
   // different screens
 
   startScreen: function () {
@@ -89,40 +89,27 @@ let lunarLander = {
   gameScreen: function () {
     let x = width / 2;
     let y = height / 2;
-    lunarLander.moon(width / 2, height / 2);
-    lunarLander.ufo(width / 2, height / 2); // this.ufo();
+
+    this.moon(width / 2, height / 2);
+    this.ufo(width / 2, height / 2); // this.ufo();
+    this.cat(x, this.catY); // Corrected line
+
+    this.catY = this.catY + this.velocity;
+    this.velocity = this.velocity + this.acceleration;
+
+    if (mouseIsPressed) {
+      this.velocity = this.velocity - 0.2;
+    }
+
+    if (this.catY > height * 0.3) {
+      this.state = "result";
+    }
   },
 
   resultScreen: function () {
     textSize(20);
     fill(255, 255, 255);
-    text("Game Over", 200, 200);
-  },
-
-  // on click
-  /*draw: function () {
-    if (this.state === "start") {
-      this.startScreen();
-    } else if (this.state === "game") {
-      this.gameScreen();
-      this.gameTimer = this.gameTimer + 1;
-      if (this.gameTimer >= 100) {
-        this.gameTimer = 0;
-        this.state = "result";
-      }
-    } else if (state === "result") {
-      this.resultScreen();
-    }
-  },
-*/
-  mouseClicked: function () {
-    if (this.state === "start") {
-      this.state = "game";
-    } else if (this.state === "game") {
-      this.state = "result";
-    } else if (this.state === "result") {
-      this.state = "game";
-    }
+    text("Kitty Crashed", 200, 200);
   },
 };
 
