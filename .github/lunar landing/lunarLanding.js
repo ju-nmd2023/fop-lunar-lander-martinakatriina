@@ -6,8 +6,6 @@ let lunarLander = {
   catY: height - 330,
   velocity: 0.5,
   acceleration: 0.1,
-  x: width / 2,
-  y: height / 2,
   // gameIsRunning: false,
 
   setUp: function () {
@@ -92,16 +90,18 @@ let lunarLander = {
       }
     } else if (this.state === "result") {
       this.resultScreen();
-    } else if (this.state === "sucess") {
-      this.sucessScreen();
+    } else if (this.state === "success") {
+      this.successScreen();
     }
   },
   // different screens
 
   startScreen: function () {
+    let x = width / 2;
+    let y = height / 2;
     textSize(20);
     fill(255, 255, 255);
-    text("Start Game", 200, 200);
+    text("Start Game", x - 48, y);
   },
 
   gameScreen: function () {
@@ -115,7 +115,7 @@ let lunarLander = {
     this.catY = this.catY + this.velocity;
     this.velocity = this.velocity + this.acceleration;
 
-    if (mouseIsPressed) {
+    if (keyIsDown(32)) {
       this.velocity = this.velocity - 0.2;
     }
 
@@ -123,12 +123,12 @@ let lunarLander = {
       if (this.velocity >= 3) {
         this.state = "result";
       } else {
-        this.state = "sucess";
+        this.state = "success";
       }
     }
   },
 
-  sucessScreen: function () {
+  successScreen: function () {
     let x = width / 2;
     let y = height / 2;
     this.moon(x, y);
@@ -137,10 +137,12 @@ let lunarLander = {
 
     textSize(20);
     fill(255, 255, 255);
-    text("Kitty landed safely!", x - 60, y);
+    text("Kitty landed safely!", x - 82, y);
   },
 
   resultScreen: function () {
+    let x = width / 2;
+    let y = height / 2;
     this.moon(x, y);
     this.ufo(x, y); // this.ufo();
     this.cat(x, y + 430); // Corrected line
@@ -148,8 +150,26 @@ let lunarLander = {
     fill(255, 255, 255);
     text("Kitty Crashed", x - 60, y);
   },
-};
 
+  restartGame: function () {
+    this.catY = height - 300;
+    this.velocity = 0.5;
+  },
+};
+function keyPressed() {
+  if (keyCode === 32) {
+    if (lunarLander.state === "start") {
+      lunarLander.state = "game";
+      lunarLander.restartGame();
+    } else if (
+      lunarLander.state === "result" ||
+      lunarLander.state === "success"
+    ) {
+      lunarLander.state = "start";
+      lunarLander.restartGame();
+    }
+  }
+}
 lunarLander.setUp();
 {
   createCanvas(width, height);
