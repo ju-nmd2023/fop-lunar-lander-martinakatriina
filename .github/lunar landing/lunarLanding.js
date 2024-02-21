@@ -6,6 +6,8 @@ let lunarLander = {
   catY: height - 330,
   velocity: 0.5,
   acceleration: 0.1,
+  x: width / 2,
+  y: height / 2,
   // gameIsRunning: false,
 
   setUp: function () {
@@ -17,7 +19,7 @@ let lunarLander = {
   moon: function (x, y) {
     push();
     fill(100, 100, 100);
-    arc(x, y * 2, x * 2.3, y / 2, PI, 0, CHORD);
+    arc(x, y * 2, x * 2.3, y / 1.8, PI, 0, CHORD);
     pop();
   },
 
@@ -69,6 +71,8 @@ let lunarLander = {
   },
 
   draw: function () {
+    let gameTimer = 0;
+
     background(0, 36, 61);
     noStroke();
     for (let index in this.starX) {
@@ -76,7 +80,21 @@ let lunarLander = {
       ellipse(this.starX[index], this.starY[index], 3);
       this.starAlpha[index] = this.starAlpha[index] + 0.02;
     }
-    this.gameScreen();
+
+    if (this.state === "start") {
+      this.startScreen();
+    } else if (this.state === "game") {
+      this.gameScreen();
+      gameTimer = gameTimer + 1;
+      if (gameTimer >= 5) {
+        gameTimer = 0;
+        state = "result";
+      }
+    } else if (this.state === "result") {
+      this.resultScreen();
+    } else if (this.state === "sucess") {
+      this.sucessScreen();
+    }
   },
   // different screens
 
@@ -90,8 +108,8 @@ let lunarLander = {
     let x = width / 2;
     let y = height / 2;
 
-    this.moon(width / 2, height / 2);
-    this.ufo(width / 2, height / 2); // this.ufo();
+    this.moon(x, y);
+    this.ufo(x, y); // this.ufo();
     this.cat(x, this.catY); // Corrected line
 
     this.catY = this.catY + this.velocity;
@@ -101,15 +119,34 @@ let lunarLander = {
       this.velocity = this.velocity - 0.2;
     }
 
-    if (this.catY > height * 0.3) {
-      this.state = "result";
+    if (this.catY >= y + 430) {
+      if (this.velocity >= 3) {
+        this.state = "result";
+      } else {
+        this.state = "sucess";
+      }
     }
   },
 
-  resultScreen: function () {
+  sucessScreen: function () {
+    let x = width / 2;
+    let y = height / 2;
+    this.moon(x, y);
+    this.ufo(x, y); // this.ufo();
+    this.cat(x, y + 430); // Corrected line
+
     textSize(20);
     fill(255, 255, 255);
-    text("Kitty Crashed", 200, 200);
+    text("Kitty landed safely!", x - 60, y);
+  },
+
+  resultScreen: function () {
+    this.moon(x, y);
+    this.ufo(x, y); // this.ufo();
+    this.cat(x, y + 430); // Corrected line
+    textSize(20);
+    fill(255, 255, 255);
+    text("Kitty Crashed", x - 60, y);
   },
 };
 
