@@ -20,14 +20,6 @@ let lunarLander = {
     fill(150, 150, 150);
     arc(x, y * 2, x * 2.3, y / 1.8, PI, 0, CHORD);
     fill(180, 180, 180);
-    ellipse(x - 280, y + 263, 100, 25);
-    fill(100, 100, 100);
-    ellipse(x - 279, y + 260, 100, 25);
-
-    fill(180, 180, 180);
-    ellipse(x - 152, y + 290, 40, 15);
-    fill(100, 100, 100);
-    ellipse(x - 151, y + 287, 40, 15);
     pop();
   },
 
