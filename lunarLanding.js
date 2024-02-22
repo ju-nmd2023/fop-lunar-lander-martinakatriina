@@ -14,7 +14,7 @@ function setup() {
     starX: [],
     starY: [],
     starAlpha: [],
-    state: "game", //starting screen
+    state: "start", //starting screen
     catY: height - 360, //starting point for cat
     velocity: 0.5,
     acceleration: 0.1,
